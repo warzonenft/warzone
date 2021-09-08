@@ -1251,20 +1251,20 @@ string[] private weapons = [
     ];
     
     string[] private chestArmor = [
-        "Full Body Armor",
+        "Full Body Armour",
         "Bulletproof Vest",
         "Chain Mail",
         "Combat Vest",
-        "Flexible Body Armor",
+        "Flexible Body Armour",
         "Flak Jacket",
         "Leather Vest",
-        "Liquid Body Armor",
+        "Liquid Body Armour",
         "Police Vest",
         "Outer Tactical Vest",
         "Hazmat Suit",
         "Kevlar Suit",
         "Riot Suit",
-        "Juggernaut Armor",
+        "Juggernaut Armour",
         "Ghillie Suit"
     ];
     
@@ -1317,18 +1317,15 @@ string[] private weapons = [
         "Army Gloves"
     ];
     
-    string[] private medals = [
-        "Medal of Valor",
-        "Military Cross",
-        "Victoria Cross",
-        "Medal of Honor",
-        "Navy Cross",
-        "Airforce Cross",
-        "Silver Star",
-        "Gold Star",
-        "Bronze Star",
-        "Prisoner of War",
-        "Purple Heart"
+    string[] private rank = [
+        "Soldier",
+        "Lieutenant",
+        "Captain",
+        "Major",
+        "Colonel",
+        "General",
+        "President",
+        "Vice President"
     ];
     
     string[] private team = [
@@ -1388,8 +1385,8 @@ string[] private weapons = [
         return pluck(tokenId, "GLOVES", handArmor);
     }
     
-    function getMedals(uint256 tokenId) public view returns (string memory) {
-        return pluck(tokenId, "MEDALS", medals);
+    function getRank(uint256 tokenId) public view returns (string memory) {
+        return pluck(tokenId, "RANK", rank);
     }
     
     function getTeam(uint256 tokenId) public view returns (string memory) {
@@ -1420,35 +1417,35 @@ string[] private weapons = [
         string[17] memory parts;
         parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
 
-        parts[1] = getWeapon(tokenId);
+        parts[1] = getTeam(tokenId);
 
         parts[2] = '</text><text x="10" y="40" class="base">';
 
-        parts[3] = getArmor(tokenId);
+        parts[3] = getRank(tokenId);
 
         parts[4] = '</text><text x="10" y="60" class="base">';
 
-        parts[5] = getsecondaryWeapon(tokenId);
+        parts[5] = getWeapon(tokenId);
 
         parts[6] = '</text><text x="10" y="80" class="base">';
 
-        parts[7] = getPerks(tokenId);
+        parts[7] = getsecondaryWeapon(tokenId);
 
         parts[8] = '</text><text x="10" y="100" class="base">';
 
-        parts[9] = getBoots(tokenId);
+        parts[9] = getPerks(tokenId);
 
         parts[10] = '</text><text x="10" y="120" class="base">';
 
-        parts[11] = getGloves(tokenId);
+        parts[11] = getArmor(tokenId);
 
         parts[12] = '</text><text x="10" y="140" class="base">';
 
-        parts[13] = getMedals(tokenId);
+        parts[13] = getGloves(tokenId);
 
         parts[14] = '</text><text x="10" y="160" class="base">';
 
-        parts[15] = getTeam(tokenId);
+        parts[15] = getBoots(tokenId);
 
         parts[16] = '</text></svg>';
 
@@ -1463,21 +1460,26 @@ string[] private weapons = [
 
     function mint(uint256 tokenId) public payable nonReentrant {
         require(tokenId > 0 && tokenId <= 50000, "Token ID invalid");
-        require(price <= msg.value, "Ether value sent is not correct");
+        require(price <= msg.value, "MATIC value sent is not correct");
         _safeMint(_msgSender(), tokenId);
     }
 
     function multiMint(uint256[] memory tokenIds) public payable nonReentrant {
-        require((price * tokenIds.length) <= msg.value, "Ether value sent is not correct");
+        require((price * tokenIds.length) <= msg.value, "MATIC value sent is not correct");
         for (uint256 i = 0; i < tokenIds.length; i++) {
             require(tokenIds[i] > 0 && tokenIds[i] < 50000, "Token ID invalid");
             _safeMint(msg.sender, tokenIds[i]);
         }
     }
+    
+    function ownerMint(uint256 tokenId) public payable nonReentrant {
+        require(tokenId > 50000 && tokenId <= 50100, "Token ID invalid");
+        _safeMint(_msgSender(), tokenId);
+    }
 
 
     function withdraw() public onlyOwner {
-        payable(0x0D815B0d787Ab0d173be8600FA379CDB595314D9).transfer(address(this).balance);
+        payable(0x00255cD71eA27afBEA516451A923E7b44347a730).transfer(address(this).balance);
     }
 
     function toString(uint256 value) internal pure returns (string memory) {
